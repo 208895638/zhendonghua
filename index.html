@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title></title>
+</head>
+<body>
+<div id="showImg" style="width:200px; height:300px;"></div>
+<button id="start">开始</button>
+<button id="stop">停止</button>
+<input type="text" value="200" id="speed" />
+</body>
+</html>
+<script type="text/javascript">
+ 
+/*{
+target:null,
+img:url,
+frames:number, 帧数
+speed:500 hm,
+loop:true,
+width:null, //舞台尺寸
+height:null
+}*/
+var FBFAnimation = (function(){
+    function start() {
+        if (this.timeLine) return;
+        var speed = (this._json.speed ? this._json.speed : 500), bthis = this;
+        this.timeLine = setInterval(function() {
+            animation.apply(bthis);
+        }, speed);
+    };
+ 
+    function stop() {
+        if (this.timeLine) clearTimeout(this.timeLine);
+        this.timeLine = null;
+    };
+ 
+    function setSpeed(val) {
+        if (!val) return;
+        this._json.speed = val;
+    };
+ 
+    function getPosition() {
+        var x = 0, y = 0;
+        if ((this.startFrames == this.endFrames) && this._json.loop) this.startFrames = 0;
+        x = -(this.width * this.startFrames);
+ 
+        this.startFrames++;
+        return { x : x, y : y };
+    };
+ 
+    function animation() {
+        if (!this._json.loop && this.startFrames == this.endFrames - 1) this.stop();
+        var offset = getPosition.apply(this);
+        this._json.target.style.backgroundPosition = ""+ offset.x +"px "+ offset.y +"px";
+    };
+ 
+    function init() {
+        var target = this._json.target;
+        this.width = 0;
+        this.height = 0;
+        this.startFrames = 0;
+        this.endFrames = this._json.frames;
+        target.style.backgroundImage = 'url(' + this._json.img + ')';
+        target.style.backgroundRepeat = "no-repeat";
+        target.style.backgroundPosition = "0 0";
+ 
+        if (!this._json.width) this.width = parseInt(this._json.target.style.width);
+        if (!this._json.height) this.height = parseInt(this._json.target.style.height);
+    };
+ 
+    return function(args) {
+        this._json = args || {};
+ 
+        if (!this._json.target) throw new Error('target is not exist!');
+        if (!this._json.img) throw new Error('img not exist!');
+        if (!this._json.frames) throw new Error('frames number not exist');
+        if (typeof this._json.loop == "undefined") this._json.loop = true;
+ 
+        init.apply(this);       //initialize
+ 
+        this.start = start;     //interface
+        this.stop = stop;
+        this.setSpeed = setSpeed;
+    };
+})();
+ 
+var s = new FBFAnimation({
+    target : document.getElementById('showImg'),
+    img : 'img/demo.jpg',
+    frames : 8,
+    speed : 100
+});
+ 
+document.getElementById('start').onclick = function() {
+    s.start();
+};
+ 
+document.getElementById('stop').onclick = function() {
+    s.stop();
+};
+ 
+document.getElementById('speed').onchange = function() {
+    s.setSpeed(document.getElementById('speed').value);
+}
+</script>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Document</title>
+<style>
+.m-component-loading{
+width: 400px; height: 350px;
+margin: 20px auto;
+background:url(img/loadingimg.png) no-repeat 0 0;
+-webkit-animation: charector 1000ms 0s steps(30) infinite;
+animation: charector 1000ms 0s steps(30) infinite;
+}
+@-webkit-keyframes charector{
+100%{background-position: 0 -10500px;}
+}
+@keyframes charector{
+100%{background-position: 0 -10500px;}
+}
+</style>
+</head>
+<body> 
+    <div class="m-component-loading"> </div>
+</body>
+</html>
